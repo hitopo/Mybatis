@@ -1,0 +1,46 @@
+* {
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-size: 20px;
+    font-family: "微软雅黑";
+}
+
+.title {
+    font-weight: bold;
+}
+
+input {
+    font-size: 20px;
+    font-family: "微软雅黑";
+    margin:5px 0px;
+}
+
+input[type="text"] {
+    width: 200px;
+    height: 25px;
+}
+
+textarea {
+    resize: none;
+    width: 600px;
+    height: 100px;
+    font-size: 20px;
+    font-family: "微软雅黑";
+    margin:5px 0px;
+}
+
+#submit-btn {
+    width: 100px;
+    height: 45px;
+    font-size: 20px;
+    font-family: "微软雅黑";
+}
+
+
+.content {
+    text-align: center;
+    margin: 0 auto;
+}

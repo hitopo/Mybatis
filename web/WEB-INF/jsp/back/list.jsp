@@ -18,21 +18,25 @@
 </head>
 <body style="background: #e1e9eb;">
 <form action="<%=basePath%>List.action" id="mainForm" method="post">
-    <div class="right">
+    <%--隐藏表单元素，用来提交当前页码--%>
+    <input type="hidden" name="currentPage" id="currentPage" value="${page.currentPage}"/>
+
+        <div class="right">
         <div class="current">当前位置：<a href="javascript:void(0)" style="color:#6E6E6E;">内容管理</a> &gt; 内容列表</div>
         <div class="rightCont">
-            <p class="g_title fix">内容列表 <a class="btn03" href="#">新 增</a>&nbsp;&nbsp;&nbsp;&nbsp;
-                <a class="btn03" href="javascript:deleteBatch('<%=basePath %>');">删 除</a></p>
+            <p class="g_title fix">内容列表 <a class="btn03" href="<%=basePath%>Add.action">新 增</a>&nbsp;&nbsp;&nbsp;&nbsp;
+                <%--注意在jsp中使用java脚本可以传递值--%>
+                <a class="btn03" href="javascript:deleteBatch('<%=basePath %>');" onclick="return confirm('确定要删除吗？');">删 除</a></p>
             <table class="tab1">
                 <tbody>
                 <tr>
                     <td width="90" align="right">名称：</td>
                     <td>
-                        <input type="text" class="allInput" value="" name="command"/>
+                        <input type="text" class="allInput" value="${command}" name="command"/>
                     </td>
                     <td width="90" align="right">描述：</td>
                     <td>
-                        <input type="text" class="allInput" value="" name="description"/>
+                        <input type="text" class="allInput" value="${description}" name="description"/>
                     </td>
                     <td width="85" align="right"><input type="submit" class="tabSub" value="查 询"/></td>
                 </tr>
@@ -55,22 +59,26 @@
                             <td>${Command.name}</td>
                             <td>${Command.description}</td>
                             <td>
-                                <a href="#">修改</a>&nbsp;&nbsp;&nbsp;
-                                <a href="${basePath}/Mybatis/DeleteOne.action?id=${Command.id}">删除</a>
+                                <a href="<%=basePath%>Modify.action?id=${Command.id}">修改</a>&nbsp;&nbsp;&nbsp;
+                                <a href="<%=basePath%>DeleteOne.action?id=${Command.id}" onclick="return confirm('确定要删除吗？');">删除</a>
                             </td>
                         </tr>
                     </c:forEach>
                     </tbody>
                 </table>
                 <div class='page fix'>
-                    共 <b>xxx</b> 条
-                    <a href='###' class='first'>首页</a>
-                    <a href='###' class='pre'>上一页</a>
-                    当前第<span>1/1</span>页
-                    <a href='###' class='next'>下一页</a>
-                    <a href='###' class='last'>末页</a>
-                    跳至&nbsp;<input type='text' value='1' class='allInput w28'/>&nbsp;页&nbsp;
-                    <a href='###' class='go'>GO</a>
+                    共 <b>${page.totalNumber}</b> 条记录&nbsp;&nbsp;
+                    <c:if test="${page.currentPage!=1}">
+                    <a href="javascript:changeCurrentPage('1');" class='first'>首页</a>
+                    <a href="javascript:changeCurrentPage('${page.currentPage-1}')" class='pre'>上一页</a>
+                    </c:if>
+                    当前第<span>${page.currentPage}/${page.totalPage}</span>页
+                    <c:if test="${page.currentPage!=page.totalPage}">
+                    <a href="javascript:changeCurrentPage('${page.currentPage+1}')" class='next'>下一页</a>
+                    <a href="javascript:changeCurrentPage('${page.totalPage}')" class='last'>末页</a>
+                    </c:if>
+                    跳至&nbsp;<input id="toPageIndex" type='text' value="${page.currentPage}" class='allInput w28'/>&nbsp;页&nbsp;
+                    <a href="javascript:changeCurrentPage($('#toPageIndex').val())" class='go'>GO</a>
                 </div>
             </div>
         </div>

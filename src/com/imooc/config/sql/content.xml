@@ -3,11 +3,34 @@
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
-<mapper namespace="CommandContent">
+<mapper namespace="com.imooc.dao.ICommandContent">
     <!--resultMap中配置POJO和数据库中字段对应关系-->
     <resultMap id="ContentResult" type="com.imooc.bean.CommandContent">
         <id column="ID" jdbcType="INTEGER" property="id"/>
         <result column="Content" jdbcType="VARCHAR" property="content"/>
-        <result column="CONMAND_ID" jdbcType="VARCHAR" property="commandId"/>
+        <result column="COMMAND_ID" jdbcType="INTEGER" property="commandId"/>
+        <association property="command" resultMap="com.imooc.dao.ICommand.CommandResult">
+        </association>
     </resultMap>
+
+    <!--添加一条指令对应的具体内容-->
+    <insert id="addOne" parameterType="com.imooc.bean.CommandContent">
+        INSERT INTO COMMAND_CONTENT (CONTENT,COMMAND_ID) VALUES (#{content},#{commandId})
+    </insert>
+
+    <!--书写sql语句是注意标签内部的变量是区分大小写的，否则会出现找不到getter方法的问题-->
+    <insert id="addBatch" parameterType="java.util.List">
+        INSERT INTO  COMMAND_CONTENT (CONTENT,COMMAND_ID) VALUES
+        <foreach collection="list" item="item" separator="," close=";">
+            (#{item.content},#{item.commandId})
+        </foreach>
+    </insert>
+
+    <update id="modifyBatch" parameterType="com.imooc.bean.Command" >
+        UPDATE COMMAND_CONTENT
+        <foreach collection="#{contentList}" item="content" separator=",">
+            CONTENT =  #{content.content}
+        </foreach>
+        WHERE COMMAND_ID = #{id}
+    </update>
 </mapper>

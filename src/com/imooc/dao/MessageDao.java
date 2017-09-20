@@ -24,7 +24,10 @@ public class MessageDao {
             Message message = new Message();
             message.setCommand(command);
             message.setDescription(description);
-            messageList = sqlSession.selectList("queryMessageList",message);
+            //使用面向接口式编程
+            IMessage iMessage = sqlSession.getMapper(IMessage.class);
+            messageList = iMessage.queryMessageList(message);
+            //messageList = sqlSession.selectList("queryMessageList",message);
         } catch (IOException e) {
             e.printStackTrace();
         } finally {
@@ -33,6 +36,7 @@ public class MessageDao {
             }
         }
         return messageList;
+
     }
 
     /**
@@ -69,14 +73,13 @@ public class MessageDao {
         }
     }
 
-//    public static void main(String[] args) {
-//        MessageDao dao = new MessageDao();
-//        List<Message> list = dao.queryMessageList("", "");
-//        for (Message message : list) {
-//            System.out.println(message);
-//        }
-//    }
-
+        public static void main(String[] args) {
+        MessageDao dao = new MessageDao();
+        List<Message> list = dao.queryMessageList(null,null);
+        for (Message message : list) {
+            System.out.println(message);
+        }
+    }
 
 //    /**
 // //     * 查询参数列表(JDBC操作)
@@ -128,4 +131,7 @@ public class MessageDao {
 //        return list;
 //    }
 //
+
+
 }
+

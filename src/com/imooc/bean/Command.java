@@ -6,17 +6,21 @@ import java.util.List;
  * 命令实体类
  */
 public class Command {
-    private String id; //主键，命令id
+    private int id; //主键，命令id
     private String name;  //命令名称
     private String description;   //命令描述
     //内容列表
     private List<CommandContent> contentList;
 
-    public String getId() {
+
+    public Command() {
+    }
+
+    public int getId() {
         return id;
     }
 
-    public void setId(String id) {
+    public void setId(int id) {
         this.id = id;
     }
 
@@ -42,5 +46,13 @@ public class Command {
 
     public void setContentList(List<CommandContent> contentList) {
         this.contentList = contentList;
+    }
+
+    @Override
+    public String toString() {
+        return "Command{" +
+                "id='" + id + '\'' +
+                ", name='" + name + '\'' +
+                ", description='" + description+"'}";
     }
 }

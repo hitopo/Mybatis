@@ -23,6 +23,22 @@
         <servlet-name>AutoReplyServlet</servlet-name>
         <servlet-class>com.imooc.servlet.AutoReplyServlet</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>AddServlet</servlet-name>
+        <servlet-class>com.imooc.servlet.AddServlet</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>DoAddServlet</servlet-name>
+        <servlet-class>com.imooc.servlet.DoAddServlet</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>ModifyServlet</servlet-name>
+        <servlet-class>com.imooc.servlet.ModifyServlet</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>DoModifyServlet</servlet-name>
+        <servlet-class>com.imooc.servlet.DoModifyServlet</servlet-class>
+    </servlet>
 
     <servlet-mapping>
         <servlet-name>ListServlet</servlet-name>
@@ -47,5 +63,25 @@
     <servlet-mapping>
         <servlet-name>AutoReplyServlet</servlet-name>
         <url-pattern>/AutoReply.action</url-pattern>
+    </servlet-mapping>
+    
+    <servlet-mapping>
+        <servlet-name>AddServlet</servlet-name>
+        <url-pattern>/Add.action</url-pattern>
+    </servlet-mapping>
+    
+    <servlet-mapping>
+        <servlet-name>DoAddServlet</servlet-name>
+        <url-pattern>/DoAdd.action</url-pattern>
+    </servlet-mapping>
+    
+    <servlet-mapping>
+        <servlet-name>ModifyServlet</servlet-name>
+        <url-pattern>/Modify.action</url-pattern>
+    </servlet-mapping>
+    
+    <servlet-mapping>
+        <servlet-name>DoModifyServlet</servlet-name>
+        <url-pattern>/DoModify.action</url-pattern>
     </servlet-mapping>
 </web-app>

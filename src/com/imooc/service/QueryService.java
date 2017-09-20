@@ -3,9 +3,12 @@ package com.imooc.service;
 import com.imooc.bean.Command;
 import com.imooc.bean.CommandContent;
 import com.imooc.dao.CommandDao;
+import com.imooc.entity.Page;
 import com.imooc.util.Iconst;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Random;
 
 /**
@@ -21,22 +24,45 @@ public class QueryService {
      * @param description 查询参数
      * @return 数据列表
      */
-    public List<Command> queryCommandList(String command, String description) {
-        return commandDao.queryCommandList(command, description);
+    public List<Command> queryCommandList(String command, String description, Page page) {
+        //组织Command对象
+        Command messageCommand = new Command();
+        messageCommand.setName(command);
+        messageCommand.setDescription(description);
+        //获取总页数
+        CommandDao commandDao = new CommandDao();
+        int totalNumber = commandDao.count(messageCommand);
+        page.setTotalNumber(totalNumber);
+        page.count();
+        //放置参数
+        Map<String,Object> parameters = new HashMap<>();
+        parameters.put("command",messageCommand);
+        parameters.put("page",page);
+        //获取返回结果
+        return commandDao.queryCommandList(parameters);
     }
 
+    /**
+     * 根据用户发送的关键词查询
+     * @param command 关键词
+     * @return 展现给用户的内容
+     */
     public String queryByCommand(String command) {
-        List<Command> commandList = null;
+        List<Command> commandList;
+        Map<String,Object> params = new HashMap<>();
         //用户输入的是“帮助”
         if (Iconst.HTLP_COMMAND.equals(command)) {
-            commandList = commandDao.queryCommandList(null, null);
+            commandList = commandDao.queryCommandList(null);
             StringBuilder str = new StringBuilder();
             if (commandList.size() > 0) {
                 for (int i = 0; i < commandList.size(); i++) {
                     if (i != 0) {
                         //第二行之后追加换行
-                        str.append("<br/>");
-                        str.append("回复[" + commandList.get(i).getName() + "]即可查看" + commandList.get(i).getDescription());
+                        str.append("<br/>")
+                                .append("回复[")
+                                .append(commandList.get(i).getName())
+                                .append("]即可查看")
+                                .append(commandList.get(i).getDescription());
                     }
                 }
                 return str.toString();
@@ -46,7 +72,10 @@ public class QueryService {
             }
         }
 
-        commandList = commandDao.queryCommandList(command, null);
+        Command messageCommand = new Command();
+        messageCommand.setName(command);
+        params.put("command",messageCommand);
+        commandList = commandDao.queryCommandList(params);
         if (commandList.size() > 0) {
             //后台确实有数据
             List<CommandContent> contentList = commandList.get(0).getContentList();
@@ -57,4 +86,16 @@ public class QueryService {
         return Iconst.NO_MATCH_CONTENT;
     }
 
+    /**
+     * 获取command对象
+     * @param id 查询id
+     * @return command对象
+     */
+    public Command queryOneById(String id) {
+        if(id!=null && !"".equals(id)) {
+            int i = Integer.valueOf(id);
+            return commandDao.queryOneById(i);
+        }
+        return null;
+    }
 }

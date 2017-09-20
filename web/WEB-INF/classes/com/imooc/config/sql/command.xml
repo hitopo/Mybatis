@@ -3,27 +3,104 @@
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
-<mapper namespace="Command">
+<mapper namespace="com.imooc.dao.ICommand">
+
     <!--resultMap中配置POJO和数据库中字段对应关系-->
     <resultMap id="CommandResult" type="com.imooc.bean.Command">
         <id column="C_ID" jdbcType="INTEGER" property="id"/>
         <result column="NAME" jdbcType="VARCHAR" property="name"/>
         <result column="DESCRIPTION" jdbcType="VARCHAR" property="description"/>
         <!--配置一对多的映射关系-->
-        <collection property="contentList" resultMap="CommandContent.ContentResult"/>
+        <collection property="contentList"
+                    resultMap="com.imooc.dao.ICommandContent.ContentResult"/>
     </resultMap>
 
-    <select id="queryCommandList" parameterType="com.imooc.bean.Command" resultMap="CommandResult">
+    <!--查询指令列表（不带有内容）-->
+    <select id="queryCommandList" parameterType="java.util.Map" resultMap="CommandResult">
+      SELECT ID C_ID,NAME,DESCRIPTION
+        FROM COMMAND
+        <where>
+            <if test="command.name != null and !&quot;&quot;.equals(command.name.trim())">
+                AND NAME = #{command.name}
+            </if>
+            <!--注意：这里的#{}括号中间的内容是严格区分大小写的，只有数据库的字段是不区分大小写的，注意注意-->
+            <if test="command.description != null and !&quot;&quot;.equals(command.description.trim())">
+                AND DESCRIPTION like '%' #{command.description} '%'
+            </if>
+        </where>
+        <!--这里使用order by语句进行排序，然后将page的属性传递到数据库中-->
+        <!--注意这里的page对象中的属性火速区分大小写的-->
+        ORDER BY C_ID LIMIT #{page.dbIndex},#{page.dbNumber}
+    </select>
+
+    <!--查询指令列表（带有所有内容，左外连接查询）-->
+    <select id="queryCommandListWithContent" parameterType="java.util.Map" resultMap="CommandResult">
         SELECT a.ID C_ID,a.NAME,a.DESCRIPTION,b.CONTENT,b.ID,b.COMMAND_ID
         FROM COMMAND a LEFT JOIN COMMAND_CONTENT b
         ON a.id = b.COMMAND_ID
         <where>
-            <if test="name != null and !&quot;&quot;.equals(name.trim())">
-                AND a.NAME = #{name}
+            <if test="command.name != null and !&quot;&quot;.equals(command.name.trim())">
+                AND a.NAME = #{command.name}
             </if>
-            <if test="description != null and !&quot;&quot;.equals(description.trim())">
-                AND a.DESCRIPTION like '%' #{description} '%'
+            <if test="command.DESCRIPTION != null and !&quot;&quot;.equals(command.DESCRIPTION.trim())">
+                AND a.DESCRIPTION like '%' #{command.DESCRIPTION} '%'
             </if>
         </where>
     </select>
+
+    <!--查询单个对象-->
+    <select id="queryOneById" parameterType="int" resultMap="CommandResult">
+        SELECT a.ID C_ID,a.NAME,a.DESCRIPTION,b.ID,b.CONTENT,b.COMMAND_ID
+        FROM COMMAND a LEFT JOIN COMMAND_CONTENT b
+        ON a.id = b.COMMAND_ID
+        WHERE a.ID = #{_parameter}
+    </select>
+
+    <!--查询记录总数-->
+    <select id="count" parameterType="com.imooc.bean.Command" resultType="int">
+        SELECT count(*) from COMMAND
+        <where>
+            <if test="name!=null and !&quot;&quot;.equals(name)">
+                AND name = #{name}
+            </if>
+            <if test="description!=null and !&quot;&quot;.equals(description)">
+                AND description like '%' #{description} '%'
+            </if>
+        </where>
+    </select>
+
+    <!--删除单条指令-->
+    <delete id="deleteOne" parameterType="int">
+        DELETE FROM COMMAND WHERE ID = #{_parameter}
+    </delete>
+
+    <!--删除多条指令-->
+    <delete id="deleteBatch" parameterType="java.util.List">
+        DELETE FROM COMMAND WHERE ID IN (
+        <foreach collection="list" item = "item" separator=",">
+            #{item}
+        </foreach>
+        )
+    </delete>
+
+    <!--插入一条指令（这里不同于hibernate，不能够级联插入，必须在分别保存）-->
+    <insert id="addOne" parameterType="com.imooc.bean.Command"
+            useGeneratedKeys="true" keyProperty="id">
+      INSERT INTO COMMAND (NAME,DESCRIPTION) VALUES (#{name},#{description})
+    </insert>
+
+    <!--修改单条-->
+    <update id="modifyOne" parameterType="com.imooc.bean.Command"
+            useGeneratedKeys="true" keyProperty="id">
+        UPDATE COMMAND
+      <set>
+          <if test="name != null and !&quot;&quot;.equals(name.trim())">
+             NAME = #{name},
+          </if>
+          <if test="description!=null and !&quot;&quot;.equals(description.trim())">
+             DESCRIPTION = #{description},
+          </if>
+      </set>
+      WHERE ID = #{id}
+    </update>
 </mapper>

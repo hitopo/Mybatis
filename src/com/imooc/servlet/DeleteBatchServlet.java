@@ -25,6 +25,6 @@ public class DeleteBatchServlet extends HttpServlet {
         maintainService.deleteBatch(ids);
 
         //返回数据给jsp页面
-        request.getRequestDispatcher("/List.action").forward(request,response);
+        response.sendRedirect("List.action");
     }
 }

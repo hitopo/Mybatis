@@ -11,6 +11,7 @@
             </transactionManager>
             <dataSource type="UNPOOLED">
                 <property name="driver" value="com.mysql.jdbc.Driver"/>
+                <!--使用utf8编码-->
                 <property name="url" value="jdbc:mysql://127.0.0.1/mybatis?useUnicode=true&amp;characterEncoding=utf-8"/>
                 <property name="username" value="root"/>
                 <property name="password" value=""/>
@@ -18,6 +19,7 @@
         </environment>
     </environments>
 
+    <!--配置映射文件-->
     <mappers>
         <mapper resource="com/imooc/config/sql/message.xml"/>
         <mapper resource="com/imooc/config/sql/command.xml"/>
