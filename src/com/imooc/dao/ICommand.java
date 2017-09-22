@@ -17,7 +17,6 @@ public interface ICommand {
      */
     List<Command> queryCommandList(Map<String, Object> parameters);
 
-
     /**
      *  查询指令总数
      * @return 总数

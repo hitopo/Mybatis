@@ -50,9 +50,12 @@ public class QueryService {
     public String queryByCommand(String command) {
         List<Command> commandList;
         Map<String,Object> params = new HashMap<>();
+        Command messageCommand = new Command();
+        params.put("command",messageCommand);
+        //params.put("page",new Page());
         //用户输入的是“帮助”
         if (Iconst.HTLP_COMMAND.equals(command)) {
-            commandList = commandDao.queryCommandList(null);
+            commandList = commandDao.queryCommandList(params);
             StringBuilder str = new StringBuilder();
             if (commandList.size() > 0) {
                 for (int i = 0; i < commandList.size(); i++) {
@@ -72,15 +75,19 @@ public class QueryService {
             }
         }
 
-        Command messageCommand = new Command();
+        //用户输入的不是“帮助”
         messageCommand.setName(command);
-        params.put("command",messageCommand);
         commandList = commandDao.queryCommandList(params);
         if (commandList.size() > 0) {
             //后台确实有数据
             List<CommandContent> contentList = commandList.get(0).getContentList();
-            int index = new Random().nextInt(contentList.size());
-            return contentList.get(index).getContent();
+            if(contentList.size()>0) {
+                int index = new Random().nextInt(contentList.size());
+                return contentList.get(index).getContent();
+            } else {
+                //没有content数据
+                return  Iconst.NO_AVAIABLE_CONTENT;
+            }
         }
         //没有查询到数据
         return Iconst.NO_MATCH_CONTENT;

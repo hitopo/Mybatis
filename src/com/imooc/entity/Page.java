@@ -23,7 +23,7 @@ public class Page {
     public void count() {
         //计算总页数
         int totalPageTemp = totalNumber / pageNumber;
-        int plus = (totalNumber / pageNumber) == 0 ? 0 : 1;
+        int plus = (totalNumber % pageNumber) == 0 ? 0 : 1;
         totalPageTemp =  totalPageTemp + plus;
         if(totalPageTemp == 0) {
             totalPageTemp = 1;
