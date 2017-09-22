@@ -23,19 +23,21 @@
         <label for="name">指令名称：</label>
         <input type="text" name="name" id="name" value="${command.name}">
         <br>
-        <label for="description">描&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;述：</label>
+        <label for="description">描&nbsp;&nbsp;&nbsp;&nbsp;述：</label>
         <input type="text" name="description" id="description" value="${command.description}">
         <br>
         <strong>内&nbsp;容：</strong>
-        <br>
-        <div id="content_div">
-        <textarea name="content" class="list">${command.contentList[0].content}
-        </textarea><br>
-        <textarea name="content" class="list">${command.contentList[1].content}
-        </textarea><br>
-        <textarea name="content" class="list">${command.contentList[2].content}
-        </textarea><br>
+        <%--${command.contentList[0].content--%>
+        <a href="#" id="AddMoreFileBox" class="btn_addMore">添加更多内容</a>
+        <div id="InputsWrapper">
+            <c:forEach items="${command.contentList}" var="commandcontent">
+            <div>
+                <textarea name="content">${commandcontent.content}</textarea>
+                <a href="#" class="removeclass">×</a>
+            </div>
+            </c:forEach>
         </div>
+        <br>
         <input type="button" name="submit-btn" value="确认修改" id="submit-btn">
     </div>
 </form>

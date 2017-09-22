@@ -22,4 +22,35 @@ public interface ICommand {
      * @return 总数
      */
      int count(Command command);
+
+    /**
+     * 删除指令
+     * @param id 指令id
+     */
+    void deleteOne(int id);
+
+    /**
+     * 批量删除
+     * @param ids 指令ids
+     */
+    void deleteBatch(List<Integer> ids);
+
+    /**
+     * 添加一条指令
+     * @param command 指令
+     */
+    void addOne(Command command);
+
+    /**
+     * 查询command
+     * @param id id
+     * @return 指令对象
+     */
+    Command queryOneById(int id);
+
+    /**
+     * 修改指令
+     * @param command 指令数据
+     */
+    void modifyOne(Command command);
 }

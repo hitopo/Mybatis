@@ -52,15 +52,15 @@
                         <th>描述</th>
                         <th>操作</th>
                     </tr>
-                    <c:forEach items="${commandList}" var="Command" varStatus="status">
+                    <c:forEach items="${commandList}" var="command" varStatus="status">
                         <tr <c:if test="${status.index %2 != 0}">style='background-color: #ECF6EE;'</c:if>>
-                            <td><input type="checkbox" name="id" value="${Command.id}"/></td>
+                            <td><input type="checkbox" name="id" value="${command.id}"/></td>
                             <td>${status.index + 1}</td>
-                            <td>${Command.name}</td>
-                            <td>${Command.description}</td>
+                            <td>${command.name}</td>
+                            <td>${command.description}</td>
                             <td>
-                                <a href="<%=basePath%>Modify.action?id=${Command.id}">修改</a>&nbsp;&nbsp;&nbsp;
-                                <a href="<%=basePath%>DeleteOne.action?id=${Command.id}" onclick="return confirm('确定要删除吗？');">删除</a>
+                                <a href="<%=basePath%>Modify.action?id=${command.id}">修改</a>&nbsp;&nbsp;&nbsp;
+                                <a href="<%=basePath%>DeleteOne.action?id=${command.id}" onclick="return confirm('确定要删除吗？');">删除</a>
                             </td>
                         </tr>
                     </c:forEach>
@@ -68,14 +68,14 @@
                 </table>
                 <div class='page fix'>
                     共 <b>${page.totalNumber}</b> 条记录&nbsp;&nbsp;
-                    <c:if test="${page.currentPage!=1}">
-                    <a href="javascript:changeCurrentPage('1');" class='first'>首页</a>
-                    <a href="javascript:changeCurrentPage('${page.currentPage-1}')" class='pre'>上一页</a>
-                    </c:if>
                     当前第<span>${page.currentPage}/${page.totalPage}</span>页
+                    <c:if test="${page.currentPage!=1}">
+                        <a href="javascript:changeCurrentPage('1');" class='first'>首页</a>
+                        <a href="javascript:changeCurrentPage('${page.currentPage-1}')" class='pre'>上一页</a>
+                    </c:if>
                     <c:if test="${page.currentPage!=page.totalPage}">
-                    <a href="javascript:changeCurrentPage('${page.currentPage+1}')" class='next'>下一页</a>
-                    <a href="javascript:changeCurrentPage('${page.totalPage}')" class='last'>末页</a>
+                        <a href="javascript:changeCurrentPage('${page.currentPage+1}')" class='next'>下一页</a>
+                        <a href="javascript:changeCurrentPage('${page.totalPage}')" class='last'>末页</a>
                     </c:if>
                     跳至&nbsp;<input id="toPageIndex" type='text' value="${page.currentPage}" class='allInput w28'/>&nbsp;页&nbsp;
                     <a href="javascript:changeCurrentPage($('#toPageIndex').val())" class='go'>GO</a>

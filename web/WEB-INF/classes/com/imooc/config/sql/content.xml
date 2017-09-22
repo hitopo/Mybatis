@@ -13,24 +13,26 @@
         </association>
     </resultMap>
 
-    <!--添加一条指令对应的具体内容-->
-    <insert id="addOne" parameterType="com.imooc.bean.CommandContent">
-        INSERT INTO COMMAND_CONTENT (CONTENT,COMMAND_ID) VALUES (#{content},#{commandId})
-    </insert>
 
     <!--书写sql语句是注意标签内部的变量是区分大小写的，否则会出现找不到getter方法的问题-->
     <insert id="addBatch" parameterType="java.util.List">
-        INSERT INTO  COMMAND_CONTENT (CONTENT,COMMAND_ID) VALUES
+        INSERT INTO COMMAND_CONTENT (CONTENT,COMMAND_ID) VALUES
         <foreach collection="list" item="item" separator="," close=";">
             (#{item.content},#{item.commandId})
         </foreach>
     </insert>
 
-    <update id="modifyBatch" parameterType="com.imooc.bean.Command" >
-        UPDATE COMMAND_CONTENT
-        <foreach collection="#{contentList}" item="content" separator=",">
-            CONTENT =  #{content.content}
-        </foreach>
+    <!--&lt;!&ndash;批量修改数据&ndash;&gt;-->
+    <!--<update id="modifyBatch" parameterType="com.imooc.bean.Command" >-->
+    <!--UPDATE COMMAND_CONTENT-->
+    <!--<foreach collection="#{contentList}" item="commandcontent" separator=",">-->
+    <!--CONTENT =  #{.content}-->
+    <!--</foreach>-->
+    <!--WHERE COMMAND_ID = #{id}-->
+    <!--</update>-->
+
+    <delete id="deleteBatch" parameterType="com.imooc.bean.Command">
+        DELETE FROM COMMAND_CONTENT
         WHERE COMMAND_ID = #{id}
-    </update>
+    </delete>
 </mapper>

@@ -23,17 +23,18 @@
         <label for="name">指令名称：</label>
         <input type="text" name="name" id="name">
         <br>
-        <label for="description">描&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;述：</label>
+        <label for="description">描&nbsp;&nbsp;&nbsp;&nbsp;述：</label>
         <input type="text" name="description" id="description">
         <br>
         <strong>内&nbsp;容：</strong>
-        <br>
-        <div id="content_div">
-        <textarea name="content" class="list"></textarea><br>
-        <textarea name="content" class="list"></textarea><br>
-        <textarea name="content" class="list"></textarea><br>
+        <a href="#" id="AddMoreFileBox" class="btn_addMore">添加更多内容</a>
+        <div id="InputsWrapper">
+            <div>
+                <textarea name="content" id="field_1"></textarea>
+                <a href="#" class="removeclass">×</a>
+            </div>
         </div>
-        <input type="button" name="submit-btn" value="确认添加" id="submit-btn">
+        <input type="button" name="submit-btn" value="添加指令" id="submit-btn">
     </div>
 </form>
 </body>

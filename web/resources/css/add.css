@@ -24,23 +24,28 @@ input[type="text"] {
 }
 
 textarea {
+    width: 500px;
+    height:100px;
     resize: none;
-    width: 600px;
-    height: 100px;
-    font-size: 20px;
+    font-size: 16px;
     font-family: "微软雅黑";
     margin:5px 0px;
 }
 
 #submit-btn {
+    text-align: center;
     width: 100px;
-    height: 45px;
-    font-size: 20px;
+    height: 30px;
+    font-size: 14px;
     font-family: "微软雅黑";
 }
-
 
 .content {
     text-align: center;
     margin: 0 auto;
 }
+
+a{
+    text-decoration: none;
+}
+

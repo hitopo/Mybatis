@@ -15,34 +15,17 @@
                     resultMap="com.imooc.dao.ICommandContent.ContentResult"/>
     </resultMap>
 
-    <!--查询指令列表（不带有内容）-->
-    <!--<select id="queryCommandList" parameterType="java.util.Map" resultMap="CommandResult">-->
-    <!--SELECT ID C_ID,NAME,DESCRIPTION-->
-    <!--FROM COMMAND-->
-    <!--<where>-->
-    <!--<if test="command.name != null and !&quot;&quot;.equals(command.name.trim())">-->
-    <!--AND NAME = #{command.name}-->
-    <!--</if>-->
-    <!--&lt;!&ndash;注意：这里的#{}括号中间的内容是严格区分大小写的，只有数据库的字段是不区分大小写的，注意注意&ndash;&gt;-->
-    <!--<if test="command.description != null and !&quot;&quot;.equals(command.description.trim())">-->
-    <!--AND DESCRIPTION like '%' #{command.description} '%'-->
-    <!--</if>-->
-    <!--</where>-->
-
-    <!--</select>-->
-
-    <!--查询指令列表（带有所有内容，左外连接查询）-->
+    <!--查询指令列表-->
     <!--带有分页功能-->
     <select id="queryCommandList" parameterType="java.util.Map" resultMap="CommandResult">
-        SELECT a.ID C_ID,a.NAME,a.DESCRIPTION,b.CONTENT,b.ID,b.COMMAND_ID
-        FROM COMMAND a LEFT JOIN COMMAND_CONTENT b
-        ON a.id = b.COMMAND_ID
+        SELECT ID C_ID,NAME,DESCRIPTION
+        FROM COMMAND
         <where>
             <if test="command.name != null and !&quot;&quot;.equals(command.name.trim())">
-                AND a.NAME = #{command.name}
+                AND NAME = #{command.name}
             </if>
             <if test="command.description != null and !&quot;&quot;.equals(command.description.trim())">
-                AND a.DESCRIPTION like '%' #{command.description} '%'
+                AND DESCRIPTION like '%' #{command.description} '%'
             </if>
         </where>
         <!--这里使用order by语句进行排序，然后将page的属性传递到数据库中-->
@@ -54,6 +37,7 @@
     </select>
 
     <!--查询单个对象-->
+    <!--这样是带有content对象的-->
     <select id="queryOneById" parameterType="int" resultMap="CommandResult">
         SELECT
             a.ID C_ID,
@@ -95,13 +79,14 @@
         )
     </delete>
 
-    <!--插入一条指令（这里不同于hibernate，不能够级联插入，必须在分别保存）-->
+    <!--插入一条指令（这里不同于hibernate，不能够级联插入，必须分别保存）-->
+    <!--主键自动生成-->
     <insert id="addOne" parameterType="com.imooc.bean.Command"
             useGeneratedKeys="true" keyProperty="id">
         INSERT INTO COMMAND (NAME, DESCRIPTION) VALUES (#{name}, #{description})
     </insert>
 
-    <!--修改单条-->
+    <!--修改单条指令-->
     <update id="modifyOne" parameterType="com.imooc.bean.Command"
             useGeneratedKeys="true" keyProperty="id">
         UPDATE COMMAND

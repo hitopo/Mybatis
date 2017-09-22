@@ -17,7 +17,7 @@ public class CommandDao {
     /**
      * 通过mybatis访问数据库实现查询操作
      */
-    public List<Command> queryCommandList(Map<String,Object> parameters) {
+    public List<Command> queryCommandList(Map<String, Object> parameters) {
         List<Command> CommandList = new ArrayList<>();
         SqlSession sqlSession = null;
         try {
@@ -43,7 +43,8 @@ public class CommandDao {
         SqlSession sqlSession = null;
         try {
             sqlSession = DbAccess.getSqlSession();
-            sqlSession.delete("Command.deleteOne", id);
+            ICommand iCommand = sqlSession.getMapper(ICommand.class);
+            iCommand.deleteOne(id);
             sqlSession.commit();
         } catch (IOException e) {
             e.printStackTrace();
@@ -63,7 +64,8 @@ public class CommandDao {
         SqlSession sqlSession = null;
         try {
             sqlSession = DbAccess.getSqlSession();
-            sqlSession.delete("Command.deleteBatch", ids);
+            ICommand iCommand = sqlSession.getMapper(ICommand.class);
+            iCommand.deleteBatch(ids);
             sqlSession.commit();
         } catch (IOException e) {
             e.printStackTrace();
@@ -88,7 +90,8 @@ public class CommandDao {
         try {
             sqlSession = DbAccess.getSqlSession();
             //先插入command数据，先提交，否则不满足外键约束，添加不了数据
-            sqlSession.insert("Command.addOne", command);
+            ICommand iCommand = sqlSession.getMapper(ICommand.class);
+            iCommand.addOne(command);
             sqlSession.commit();
             sqlSession.close();
             //重新获取sqlsession，使得两次插入操作分开
@@ -99,7 +102,8 @@ public class CommandDao {
                 content.setCommandId(command.getId());
             }
             //再插入content数据
-            sqlSession.insert("CommandContent.addBatch", contents);
+            ICommandContent iCommandContent = sqlSession.getMapper(ICommandContent.class);
+            iCommandContent.addBatch(contents);
             //提交事务，完成添加
             sqlSession.commit();
         } catch (IOException e) {
@@ -122,7 +126,8 @@ public class CommandDao {
         SqlSession sqlSession = null;
         try {
             sqlSession = DbAccess.getSqlSession();
-            command = sqlSession.selectOne("Command.queryOneById", id);
+            ICommand iCommand = sqlSession.getMapper(ICommand.class);
+            command = iCommand.queryOneById(id);
         } catch (IOException e) {
             e.printStackTrace();
         } finally {
@@ -134,32 +139,8 @@ public class CommandDao {
     }
 
     /**
-     * 修改单个对象
-     *
-     * @param command 参数
-     */
-    public void modifyOne(Command command) {
-        SqlSession sqlSession = null;
-        try {
-            sqlSession = DbAccess.getSqlSession();
-            sqlSession.update("Command.modifyOne", command);
-            sqlSession.commit();
-            sqlSession.close();
-            //提交事务
-            sqlSession = DbAccess.getSqlSession();
-            sqlSession.update("Content.modifyBatch",command);
-            sqlSession.commit();
-        } catch (IOException e) {
-            e.printStackTrace();
-        } finally {
-            if (sqlSession != null) {
-                sqlSession.close();
-            }
-        }
-    }
-
-    /**
      * 查询记录总条数
+     *
      * @param command 指令对象
      * @return 总条数
      */
@@ -174,7 +155,7 @@ public class CommandDao {
         } catch (IOException e) {
             e.printStackTrace();
         } finally {
-            if(sqlSession != null) {
+            if (sqlSession != null) {
                 sqlSession.close();
             }
         }
@@ -182,4 +163,47 @@ public class CommandDao {
 
     }
 
+
+    //存在问题，暂停使用
+
+    /**
+     * 修改单个对象
+     *
+     * @param command 参数
+     */
+    public void modifyOne(Command command) {
+        SqlSession sqlSession = null;
+        try {
+            //先修改指令
+            sqlSession = DbAccess.getSqlSession();
+            ICommand iCommand = sqlSession.getMapper(ICommand.class);
+            iCommand.modifyOne(command);
+            sqlSession.commit();
+            sqlSession.close();
+
+            //设置commandId
+            List<CommandContent> contents = command.getContentList();
+            for (CommandContent content : contents) {
+                content.setCommandId(command.getId());
+            }
+
+            //先删除内容再重新添加
+            sqlSession = DbAccess.getSqlSession();
+            ICommandContent iCommandContent1 = sqlSession.getMapper(ICommandContent.class);
+            iCommandContent1.deleteBatch(command);
+            sqlSession.commit();
+            sqlSession.close();
+
+            //重新添加数据添加数据
+            sqlSession = DbAccess.getSqlSession();
+            ICommandContent iCommandContent2 = sqlSession.getMapper(ICommandContent.class);
+            iCommandContent2.addBatch(command.getContentList());
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            if (sqlSession != null) {
+                sqlSession.close();
+            }
+        }
+    }
 }

@@ -67,9 +67,10 @@ public class MaintainService {
 
     /**
      * 修改指令
-     * @param name 指令名称
+     *
+     * @param name        指令名称
      * @param description 指令描述
-     * @param contents 指令内容
+     * @param contents    指令内容
      */
     public void modifyOne(String name, String description, String[] contents) {
         //组合参数
@@ -78,7 +79,7 @@ public class MaintainService {
         command.setDescription(description);
         List<CommandContent> contentList = new ArrayList<>();
         for (String content : contents) {
-            if(content!=null&&!"".equals(content.trim())) {
+            if (content != null && !"".equals(content.trim())) {
                 CommandContent commandContent = new CommandContent();
                 commandContent.setContent(content);
                 contentList.add(commandContent);
