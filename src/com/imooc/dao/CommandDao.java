@@ -85,7 +85,6 @@ public class CommandDao {
      *                只能自己书写sql语句分开单独插入所有内容
      */
     public void addOne(Command command) {
-        System.out.println(command);
         SqlSession sqlSession = null;
         try {
             sqlSession = DbAccess.getSqlSession();
@@ -93,7 +92,7 @@ public class CommandDao {
             ICommand iCommand = sqlSession.getMapper(ICommand.class);
             iCommand.addOne(command);
             sqlSession.commit();
-            sqlSession.close();
+
             //重新获取sqlsession，使得两次插入操作分开
             sqlSession = DbAccess.getSqlSession();
             List<CommandContent> contents = command.getContentList();
@@ -178,26 +177,22 @@ public class CommandDao {
             sqlSession = DbAccess.getSqlSession();
             ICommand iCommand = sqlSession.getMapper(ICommand.class);
             iCommand.modifyOne(command);
-            sqlSession.commit();
-            sqlSession.close();
 
-            //设置commandId
+            //先删除内容再重新添加
+            //设置content中的外键（commandId）
+            //否则添加不进数据库
             List<CommandContent> contents = command.getContentList();
             for (CommandContent content : contents) {
                 content.setCommandId(command.getId());
             }
 
-            //先删除内容再重新添加
-            sqlSession = DbAccess.getSqlSession();
-            ICommandContent iCommandContent1 = sqlSession.getMapper(ICommandContent.class);
-            iCommandContent1.deleteBatch(command);
-            sqlSession.commit();
-            sqlSession.close();
+            // 删除command对应的所有内容，重新添加
+            ICommandContent iCommandContent = sqlSession.getMapper(ICommandContent.class);
+            iCommandContent.deleteBatch(command.getId());
 
-            //重新添加数据添加数据
-            sqlSession = DbAccess.getSqlSession();
-            ICommandContent iCommandContent2 = sqlSession.getMapper(ICommandContent.class);
-            iCommandContent2.addBatch(command.getContentList());
+            //重新添加数据
+            iCommandContent.addBatch(command.getContentList());
+            sqlSession.commit();
         } catch (IOException e) {
             e.printStackTrace();
         } finally {

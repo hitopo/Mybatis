@@ -16,6 +16,8 @@
 </head>
 <body>
 <form action="<%=basePath%>DoModify.action" method="post" id="mainForm">
+    <%--埋一个hidden表单，将修改的commandId传递过去--%>
+    <input type="hidden" name="id" value="${command.id}">
     <div class="header" style="color:#6E6E6E;">
         当前位置：&gt;内容管理&gt;修改内容
     </div>

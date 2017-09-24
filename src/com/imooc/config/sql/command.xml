@@ -98,8 +98,9 @@
                 DESCRIPTION = #{description},
             </if>
         </set>
-         <!--这里不知道id值 =-= 卧了个槽 这怎么解决
+        <!--这里不知道id值 =-= 卧了个槽 这怎么解决-->
+        <!--在jsp中使用hidden提交一个修改的commandId过来-->
         WHERE ID = #{id}
-        -->
+
     </update>
 </mapper>

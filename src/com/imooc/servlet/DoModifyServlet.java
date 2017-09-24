@@ -17,13 +17,14 @@ public class DoModifyServlet extends HttpServlet {
         request.setCharacterEncoding("utf-8");
 
         //接收表单数据
+        String id = request.getParameter("id");
         String name = request.getParameter("name");
         String description = request.getParameter("description");
         String[] contents = request.getParameterValues("content");
 
         //调用service层更新指令
         MaintainService maintainService = new MaintainService();
-        maintainService.modifyOne(name,description,contents);
+        maintainService.modifyOne(id,name,description,contents);
 
         //页面跳转
         response.sendRedirect("List.action");

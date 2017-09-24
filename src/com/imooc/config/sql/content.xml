@@ -31,8 +31,7 @@
     <!--WHERE COMMAND_ID = #{id}-->
     <!--</update>-->
 
-    <delete id="deleteBatch" parameterType="com.imooc.bean.Command">
-        DELETE FROM COMMAND_CONTENT
-        WHERE COMMAND_ID = #{id}
+    <delete id="deleteBatch" parameterType="int">
+        DELETE FROM COMMAND_CONTENT WHERE COMMAND_ID = #{_parameter}
     </delete>
 </mapper>

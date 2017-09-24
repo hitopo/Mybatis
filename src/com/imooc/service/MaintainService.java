@@ -72,9 +72,13 @@ public class MaintainService {
      * @param description 指令描述
      * @param contents    指令内容
      */
-    public void modifyOne(String name, String description, String[] contents) {
+    public void modifyOne(String id,String name, String description, String[] contents) {
+        if(id==null || "".equals(id)) {
+            return;
+        }
         //组合参数
         Command command = new Command();
+        command.setId(Integer.valueOf(id));
         command.setName(name);
         command.setDescription(description);
         List<CommandContent> contentList = new ArrayList<>();

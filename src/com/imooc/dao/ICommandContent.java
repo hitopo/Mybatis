@@ -24,7 +24,7 @@ public interface ICommandContent {
 
     /**
      * 删除所有内容
-     * @param command 内容
+     * @param id 想要删除的外键commandId
      */
-    void deleteBatch(Command command);
+    void deleteBatch(int id);
 }
